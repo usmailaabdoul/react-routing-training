@@ -28,7 +28,7 @@ function App() {
               element: <Characters />,
             },
             {
-              path: "/:characterId/:characterName",
+              path: "/characters/:characterId",
               element: <CharacterDetails />,
             },
           ],
@@ -39,6 +39,10 @@ function App() {
         },
       ],
     },
+    // {
+    //   path: "*",
+    //   element: <div>404</div>,
+    // }
   ])
 
   return <RouterProvider router={router} />

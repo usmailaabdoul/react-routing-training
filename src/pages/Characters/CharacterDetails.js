@@ -1,12 +1,17 @@
-import { Link, useParams } from "react-router-dom";
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useLocation, useParams } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
 
 const headers = {
   "Content-Type": "Application/json",
 };
 
 const CharacterDetails = () => {
-  let { characterId, characterName } = useParams();
+  const { characterId } = useParams();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const name = queryParams.get("name");
+  console.log({location, name});
+
   const [character, setCharacter] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -18,7 +23,6 @@ const CharacterDetails = () => {
         method: "GET",
       });
       res = await res.json();
-      console.log({ res });
       setCharacter(res);
       setIsLoading(false);
     } catch (error) {
@@ -31,33 +35,14 @@ const CharacterDetails = () => {
     fetchCharacter();
   }, [fetchCharacter]);
 
-  const renderFilm = useCallback(async (film) => {
-    let filmName = ''
-    try {
-      let res = await fetch(`${film}`, {
-        headers,
-        method: "GET",
-      });
-      res = await res.json();
-      console.log({ res });
-      filmName = res.title;
-    } catch (error) {
-      console.log({ error });
-    }  
-    
-    if (filmName) {
-      return <div className="bg-neutral rounded-sm p-2">{filmName}</div>
-    }
-  }, []);
-
   return (
     <div className="container px-32 flex-1 mt-10">
       {isLoading && (
-        <div class="text-center">
+        <div className="text-center">
           <div role="status">
             <svg
               aria-hidden="true"
-              class="inline w-12 h-12 text-gray-200 animate-spin fill-primary"
+              className="inline w-12 h-12 text-gray-200 animate-spin fill-primary"
               viewBox="0 0 100 101"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -71,14 +56,14 @@ const CharacterDetails = () => {
                 fill="currentFill"
               />
             </svg>
-            <span class="sr-only">Loading...</span>
+            <span className="sr-only">Loading...</span>
           </div>
         </div>
       )}
 
       {!isLoading && character && (
         <div className="relative inline-flex group w-full">
-          <div class="absolute transitiona-all duration-1000 opacity-50 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-200 animate-tilt"></div>
+          <div className="absolute transitiona-all duration-1000 opacity-50 -inset-px bg-gradient-to-r from-[#44BCFF] via-[#FF44EC] to-[#FF675E] rounded-xl blur-lg group-hover:opacity-100 group-hover:-inset-1 group-hover:duration-200 animate-tilt"></div>
           <div className="flex bg-dark relative w-full">
             <img
               className="rounded-t-sm w-[250px] h-[340px]"
